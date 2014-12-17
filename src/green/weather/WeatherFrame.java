@@ -33,20 +33,21 @@ public class WeatherFrame extends JFrame {
 		Container container = getContentPane();
 		container.setLayout(new BorderLayout());
 
-		URL url = new URL("http://api.openweathermap.org/data/2.5/weather?q=Brooklyn&units=imperial");
-		URLConnection connection = url.openConnection();
-		InputStream in = connection.getInputStream();
-
-		byte b[] = new byte[4096];
-		int n = -1;
-		StringBuilder info = new StringBuilder();
-		while ((n = in.read(b)) != -1) {
-			info.append(new String(b, 0, n));// new string from b till n-1
-		}
-
-		String json = info.toString();
-		Gson gson = new Gson();
-		WeatherNow now = gson.fromJson(json, WeatherNow.class);
+		/*
+		 * URL url = new URL(
+		 * "http://api.openweathermap.org/data/2.5/weather?q=Brooklyn&units=imperial"
+		 * ); URLConnection connection = url.openConnection(); InputStream in =
+		 * connection.getInputStream();
+		 * 
+		 * byte b[] = new byte[4096]; int n = -1; StringBuilder info = new
+		 * StringBuilder(); while ((n = in.read(b)) != -1) { info.append(new
+		 * String(b, 0, n));// new string from b till n-1 }
+		 * 
+		 * String json = info.toString(); Gson gson = new Gson(); WeatherNow now
+		 * = gson.fromJson(json, WeatherNow.class);
+		 */
+		WeatherDownloadThread thread = new WeatherDownloadThread();
+		thread.start();
 		double temp = now.getMain().getTemp();
 		double minTemp = now.getMain().getMinTemp();
 		double maxTemp = now.getMain().getMaxTemp();
