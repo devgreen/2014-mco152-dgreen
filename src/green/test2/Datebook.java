@@ -48,7 +48,7 @@ public class Datebook {
 
 	public void addSingleEvent(Event event, Date date) {
 		if (map.containsKey(date)) {
-			dayMap.get(date).add(event);
+			map.get(date).add(event);
 
 			// events.add(event);
 		} else {
@@ -78,15 +78,15 @@ public class Datebook {
 	 * 
 	 */
 	public void addWeeklyEvent(Event event, int dayOfWeek) {
-		Integer day = dayOfWeek;
-		if (dayMap.containsKey(day)) {
-			dayMap.get(day).add(event);
+		// Integer day = dayOfWeek;
+		if (dayMap.containsKey(dayOfWeek)) {
+			dayMap.get(dayOfWeek).add(event);
 
 			// events.add(event);
 		} else {
 			ArrayList<Event> list = new ArrayList<Event>();
 			list.add(event);
-			dayMap.put(day, list);
+			dayMap.put(dayOfWeek, list);
 
 		}
 
@@ -100,16 +100,16 @@ public class Datebook {
 	 *            this is the day of the month starting with 1
 	 */
 	public void addMonthlyEvent(Event event, int dayOfMonth) {
-		Integer month = dayOfMonth;
+		// Integer month = dayOfMonth;
 
-		if (monthMap.containsKey(month)) {
-			monthMap.get(month).add(event);
+		if (monthMap.containsKey(dayOfMonth)) {
+			monthMap.get(dayOfMonth).add(event);
 
 			// events.add(event);
 		} else {
 			ArrayList<Event> list = new ArrayList<Event>();
 			list.add(event);
-			monthMap.put(month, list);
+			monthMap.put(dayOfMonth, list);
 
 		}
 
@@ -124,15 +124,15 @@ public class Datebook {
 	 *            365
 	 */
 	public void addYearlyEvent(Event event, int dayOfYear) {
-		Integer year = dayOfYear;
-		if (yearMap.containsKey(year)) {
-			yearMap.get(year).add(event);
+		// Integer year = dayOfYear;
+		if (yearMap.containsKey(dayOfYear)) {
+			yearMap.get(dayOfYear).add(event);
 
 			// events.add(event);
 		} else {
 			ArrayList<Event> list = new ArrayList<Event>();
 			list.add(event);
-			yearMap.put(year, list);
+			yearMap.put(dayOfYear, list);
 
 		}
 

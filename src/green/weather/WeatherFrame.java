@@ -24,6 +24,9 @@ import com.google.gson.Gson;
 
 public class WeatherFrame extends JFrame {
 
+	private JLabel label;
+	private JLabel image;
+
 	public WeatherFrame() throws IOException {
 		setSize(800, 600);
 		setTitle("Current Weather");
@@ -46,33 +49,41 @@ public class WeatherFrame extends JFrame {
 		 * String json = info.toString(); Gson gson = new Gson(); WeatherNow now
 		 * = gson.fromJson(json, WeatherNow.class);
 		 */
-		WeatherDownloadThread thread = new WeatherDownloadThread();
+
+		label = new JLabel("Downloading weather");
+		container.add(label);
+		image = new JLabel();
+		container.add(image);
+		WeatherDownloadThread thread = new WeatherDownloadThread(this);
 		thread.start();
-		double temp = now.getMain().getTemp();
-		double minTemp = now.getMain().getMinTemp();
-		double maxTemp = now.getMain().getMaxTemp();
+		/*
+		 * double temp = now.getMain().getTemp(); double minTemp =
+		 * now.getMain().getMinTemp(); double maxTemp =
+		 * now.getMain().getMaxTemp();
+		 * 
+		 * JPanel panel = new JPanel(); Weather[] description =
+		 * now.getWeather(); for (int i = 0; i < description.length; i++) {
+		 * String main = description[i].getMain(); String des =
+		 * description[i].getDescription(); panel.add(new JLabel(main + "; " +
+		 * des)); } container.add(panel, BorderLayout.WEST);
+		 * 
+		 * container.add(new JLabel("Current temp: " + String.valueOf(temp) +
+		 * "; Max temp: " + String.valueOf(maxTemp) + "; Min temp: " +
+		 * String.valueOf(minTemp)), BorderLayout.NORTH); String icon =
+		 * description[0].getIcon(); Image image = null; StringBuilder getUrl =
+		 * new StringBuilder();
+		 * getUrl.append("http://openweathermap.org/img/w/");
+		 * getUrl.append(icon); getUrl.append(".png"); URL url2 = new
+		 * URL(getUrl.toString()); image = ImageIO.read(url2); container.add(new
+		 * JLabel(new ImageIcon(image)), BorderLayout.CENTER);
+		 */
 
-		JPanel panel = new JPanel();
-		Weather[] description = now.getWeather();
-		for (int i = 0; i < description.length; i++) {
-			String main = description[i].getMain();
-			String des = description[i].getDescription();
-			panel.add(new JLabel(main + "; " + des));
-		}
-		container.add(panel, BorderLayout.WEST);
+	}
 
-		container.add(new JLabel("Current temp: " + String.valueOf(temp) + "; Max temp: " + String.valueOf(maxTemp)
-				+ "; Min temp: " + String.valueOf(minTemp)), BorderLayout.NORTH);
-		String icon = description[0].getIcon();
-		Image image = null;
-		StringBuilder getUrl = new StringBuilder();
-		getUrl.append("http://openweathermap.org/img/w/");
-		getUrl.append(icon);
-		getUrl.append(".png");
-		URL url2 = new URL(getUrl.toString());
-		image = ImageIO.read(url2);
-		container.add(new JLabel(new ImageIcon(image)), BorderLayout.CENTER);
-
+	public void displayWeather(WeatherNow now) {
+		label.setText(String.valueOf(now.getMain().getTemp()));
+		ImageDownloadThread thread = new ImageDownloadThread(url, image);
+		thread.start();
 	}
 
 	public static void main(String[] args) throws IOException {

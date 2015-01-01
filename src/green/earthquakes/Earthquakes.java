@@ -11,8 +11,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import com.google.gson.Gson;
 
@@ -43,13 +47,24 @@ public class Earthquakes extends JFrame {
 		Gson gson = new Gson();
 		GetEarthquakes now = gson.fromJson(json, GetEarthquakes.class);
 
-		Features [] features = now.getFeatures();
-		double mag = features[0].getMag();
-		String place = features[0].getPlace();
+		Features[] features = now.getFeatures();
 
-		container.add(new JLabel(String.valueOf(mag)), BorderLayout.WEST);
-		container.add(new JLabel(place), BorderLayout.EAST);
+		String[] information = new String[features.length];
+		for (int i = 0; i < features.length; i++) {
+			StringBuilder builder = new StringBuilder();
+			Properties properties = features[i].getProperties();
+			double mag = properties.getMag();
+			builder.append("Magnitude: ");
+			builder.append(mag);
+			builder.append(" Location: ");
 
+			String place = properties.getPlace();
+			builder.append(place);
+			information[i] = builder.toString();
+
+		}
+		JList list = new JList(information);
+		container.add(list);
 	}
 
 	public static void main(String[] args) throws IOException {
