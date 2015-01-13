@@ -73,8 +73,11 @@ public class ReadNYTimes extends JFrame {
 			@Override
 			public void valueChanged(ListSelectionEvent event) {
 				try {
+					if (!event.getValueIsAdjusting()){
 					open();
-				} catch (IOException a) { // TODO Auto-generated catch block
+					}
+				} catch (IOException a) { 
+					// TODO Auto-generated catch block
 					a.printStackTrace();
 				} catch (URISyntaxException a) {
 					// TODOAuto-generated catch block
@@ -144,8 +147,10 @@ public class ReadNYTimes extends JFrame {
 
 	public void open() throws IOException, URISyntaxException {
 		int i = list.getSelectedIndex();
+		if ( i != -1 ) {
 		URL url = articles[i].getWeb_url();
-		Desktop.getDesktop().browse(url.toURI());
+			Desktop.getDesktop().browse(url.toURI());
+		}
 	}
 
 	public static void main(String[] args) throws IOException {
