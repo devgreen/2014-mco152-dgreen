@@ -2,12 +2,11 @@ package green.weather;
 
 import java.awt.Image;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 public class ImageDownloadThread extends Thread {
@@ -28,7 +27,10 @@ public class ImageDownloadThread extends Thread {
 		URL geturl;
 		try {
 			geturl = new URL(url.toString());
-			Image image = ImageIO.read(geturl);
+			Image getimage = ImageIO.read(geturl);
+			ImageIcon icon = new ImageIcon(getimage);
+			image.setIcon(icon);
+			
 		} catch (MalformedURLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

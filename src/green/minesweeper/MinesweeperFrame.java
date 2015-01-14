@@ -1,7 +1,6 @@
 package green.minesweeper;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -16,6 +15,7 @@ import javax.swing.JLabel;
 
 public class MinesweeperFrame extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private static final int COL = 30;
 	private static final int ROW = 16;
 	private JButton cells[][];
@@ -45,11 +45,10 @@ public class MinesweeperFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				JButton button = (JButton) event.getSource();
-				int i = getI();
-				int j = getJ();
+				Location location = getI();
 
-				button.setText(String.valueOf(getNumBombs(i,j)));
-				button.setBackground(Color.PINK);
+				button.setText(String.valueOf(getNumBombs(location.getI(), location.getJ())));
+				// button.setBackground(Color.PINK);
 			}
 		};
 
@@ -111,32 +110,17 @@ public class MinesweeperFrame extends JFrame {
 		}
 	}
 
-	public int getI() {
-		int selected = 0;
+	public Location getI() {
+		Location location = new Location(0, 0);
 		for (int i = 0; i < ROW; i++) {
 			for (int j = 0; j < COL; j++) {
 				if (cells[i][j].isSelected()) {
-					selected = i;
+					location = new Location(i, j);
 					break;
-
 				}
 			}
 		}
-		return selected;
-
-	}
-	public int getJ() {
-		int selected = 0;
-		for (int i = 0; i < ROW; i++) {
-			for (int j = 0; j < COL; j++) {
-				if (cells[i][j].isSelected()) {
-					selected = j;
-					break;
-
-				}
-			}
-		}
-		return selected;
+		return location;
 
 	}
 
