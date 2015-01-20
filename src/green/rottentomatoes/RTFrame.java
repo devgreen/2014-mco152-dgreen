@@ -2,6 +2,7 @@ package green.rottentomatoes;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.FlowLayout;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -29,17 +30,11 @@ public class RTFrame extends JFrame {
 
 		image = new JPanel();
 		info = new JPanel();
-		
+
 		info.setLayout(new BorderLayout());
 		image.setLayout(new BorderLayout());
-		//Container cont = new Container();
-		//cont.setLayout(new BorderLayout());
-		//info.add(cont);
 		Container center = new Container();
 		center.setLayout(new BoxLayout(center, BoxLayout.Y_AXIS));
-		
-		info.setBorder(new EmptyBorder(10, 10, 10, 10));
-		
 
 		id = new JLabel();
 		center.add(id);
@@ -47,7 +42,8 @@ public class RTFrame extends JFrame {
 		title = new JLabel();
 		center.add(title);
 		info.add(center, BorderLayout.CENTER);
-		
+		info.setBorder(new EmptyBorder(10, 10, 10, 10));
+
 		container.add(image, BorderLayout.EAST);
 		container.add(info, BorderLayout.WEST);
 
