@@ -13,14 +13,13 @@ public class ImageDownloadThread extends Thread {
 
 	private String url;
 	private JLabel image;
-	
-	public  ImageDownloadThread(String url, JLabel image){
+
+	public ImageDownloadThread(String url, JLabel image) {
 		this.url = url;
 		this.image = image;
-		
+
 	}
-	
-	
+
 	@Override
 	public void run() {
 
@@ -30,21 +29,11 @@ public class ImageDownloadThread extends Thread {
 			Image getimage = ImageIO.read(geturl);
 			ImageIcon icon = new ImageIcon(getimage);
 			image.setIcon(icon);
-			
-		} catch (MalformedURLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
-		/*Image image = null;
-		StringBuilder getUrl = new StringBuilder();
-		getUrl.append("http://openweathermap.org/img/w/");
-		getUrl.append(icon);
-		getUrl.append(".png");
-		URL url2 = new URL(getUrl.toString());
-		image = ImageIO.read(url2);*/
 
 	}
 

@@ -1,6 +1,7 @@
 package green.minesweeper;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -21,10 +22,11 @@ public class MinesweeperFrame extends JFrame {
 	private JButton cells[][];
 	private Map<JButton, Boolean> map = new HashMap<JButton, Boolean>();
 	private JLabel numBombs;
+	private JLabel status;
 
 	public MinesweeperFrame() {
 
-		setSize(700, 450);
+		setSize(10000, 500);
 		setTitle("MineSweeper");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
@@ -37,7 +39,10 @@ public class MinesweeperFrame extends JFrame {
 		Container north = new Container();
 		north.setLayout(new BorderLayout());
 		north.add(new JLabel("Bombs remaining"), BorderLayout.WEST);
-		// north.add(numBombs, BorderLayout.CENTER);
+		numBombs = new JLabel();
+		north.add(numBombs, BorderLayout.CENTER);
+		status = new JLabel("Game in Progress");
+		north.add(status, BorderLayout.EAST);
 		game.add(north, BorderLayout.NORTH);
 
 		ActionListener next = new ActionListener() {
@@ -45,10 +50,38 @@ public class MinesweeperFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				JButton button = (JButton) event.getSource();
-				Location location = getI();
-
-				button.setText(String.valueOf(getNumBombs(location.getI(), location.getJ())));
-				// button.setBackground(Color.PINK);
+				Location location;
+				for (int i = 0; i < ROW; i++) {
+					for (int j = 0; j < COL; j++) {
+						JButton getButton = cells[i][j];
+						if (getButton == button) {
+							if (map.get(getButton)){
+								button.setText("B");
+								status.setText("Game Over");
+								for (int k=0; k<ROW; k++){
+									for (int l= 0; l< COL; l++){
+										JButton toDisable = cells[k][l];
+										if(map.get(toDisable)){
+											toDisable.setBackground(Color.RED);
+										}
+										toDisable.setEnabled(false);
+										
+									}
+								}
+								
+							}
+							else {
+						 location = new Location(i, j);
+						 button.setText(String.valueOf(getNumBombs(location.getI(), location.getJ())));
+						 break;
+							}
+						 
+						
+						}
+					}
+				}
+				
+				
 			}
 		};
 
@@ -64,6 +97,7 @@ public class MinesweeperFrame extends JFrame {
 				int n = random.nextInt(480);
 				if (n < 99) {
 					map.put(cells[i][j], true);
+					//button.setBackground(Color.RED);
 				} else {
 					map.put(cells[i][j], false);
 				}
@@ -110,19 +144,21 @@ public class MinesweeperFrame extends JFrame {
 		}
 	}
 
-	public Location getI() {
-		Location location = new Location(0, 0);
-		for (int i = 0; i < ROW; i++) {
-			for (int j = 0; j < COL; j++) {
-				if (cells[i][j].isSelected()) {
-					location = new Location(i, j);
-					break;
-				}
-			}
-		}
-		return location;
-
-	}
+//	public Location getLoc() {
+//		Location location = null;
+//		for (int i = 0; i < ROW; i++) {
+//			for (int j = 0; j < COL; j++) {
+//				JButton getButton = cells[i][j];
+//				if (getButton == button) {
+//				 location = new Location(i, j);
+//				 return location;
+//				
+//				}
+//			}
+//		}
+//		return location;
+//
+//	}
 
 	public static void main(String[] args) {
 		MinesweeperFrame frame = new MinesweeperFrame();
