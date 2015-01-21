@@ -1,0 +1,152 @@
+package green.opportunity;
+
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+public class NasaFrame extends JFrame {
+
+	private JLabel display;
+	private JLabel picNum;
+	private JButton previous;
+	private JButton next;
+	private ArrayList<String> urls = new ArrayList<String>();
+	int location = 0;
+
+	public NasaFrame() {
+
+		setSize(800, 600);
+		setTitle("NASA Frame");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
+
+		Container container = getContentPane();
+		container.setLayout(new BorderLayout());
+
+		display = new JLabel();
+		container.add(display, BorderLayout.CENTER);
+
+		picNum = new JLabel();
+		container.add(picNum, BorderLayout.SOUTH);
+
+		previous = new JButton();
+		next = new JButton();
+		Container south = new Container();
+		south.setLayout(new FlowLayout());
+		previous.setText("<");
+		next.setText(">");
+		south.add(previous);
+		south.add(picNum);
+
+		south.add(next);
+		container.add(south, BorderLayout.SOUTH);
+		DownloadMIIamages thread = new DownloadMIIamages(this);
+		thread.start();
+
+	}
+
+	public void displayImage(GetResponse response) {
+		final MIImages[] mi_images = response.getMi_images();
+		Images[] images = mi_images[0].getImages();
+		for (int i = 0; i < mi_images.length; i++) {
+			for (int j = 0; j < images.length; j++) {
+				String url = mi_images[i].images[0].getUrl();
+				urls.add(url);
+			}
+		}
+		PCamImages[] pcam_images = response.getPcam_images();
+
+		images = pcam_images[0].getImages();
+		for (int i = 0; i < pcam_images.length; i++) {
+			for (int j = 0; j < images.length; j++) {
+				String url = pcam_images[i].images[0].getUrl();
+				urls.add(url);
+			}
+		}
+
+		NCamImages[] ncam_images = response.getNcam_images();
+		images = ncam_images[0].getImages();
+		for (int i = 0; i < ncam_images.length; i++) {
+			for (int j = 0; j < images.length; j++) {
+				String url = ncam_images[i].images[0].getUrl();
+				urls.add(url);
+			}
+		}
+
+		FCamImages[] fcam_images = response.getFcam_images();
+		images = fcam_images[0].getImages();
+		for (int i = 0; i < fcam_images.length; i++) {
+			for (int j = 0; j < images.length; j++) {
+				String url = fcam_images[i].images[0].getUrl();
+				urls.add(url);
+			}
+		}
+
+		picNum.setText("0 of " + (urls.size() - 1));
+		String getUrl = images[0].getUrl();
+
+		ActionListener getNext = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+
+				// Images [] images = mi_images[1].getImages();
+				// if (location == (urls.size() - 1)) {
+				// String url = urls.get(0);
+				// picNum.setText(location + " of " + (urls.size() - 1));
+				// DownloadImageThread thread = new DownloadImageThread(display,
+				// url);
+				// thread.start();
+				//
+				// } else {
+				String url = urls.get(++location);
+				picNum.setText(location + " of " + (urls.size() - 1));
+				DownloadImageThread thread = new DownloadImageThread(display, url);
+				thread.start();
+			}
+
+		};
+		next.addActionListener(getNext);
+
+		ActionListener getPrevious = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+
+				if (location == 0) {
+					location = urls.size() - 1;
+					String url = urls.get(location);
+					picNum.setText(location + " of " + (urls.size() - 1));
+					DownloadImageThread thread = new DownloadImageThread(display, url);
+					thread.start();
+
+				} else {
+					String url = urls.get(--location);
+					picNum.setText(location + " of " + urls.size());
+					DownloadImageThread thread = new DownloadImageThread(display, url);
+					thread.start();
+
+				}
+
+			}
+		};
+		previous.addActionListener(getPrevious);
+		DownloadImageThread thread = new DownloadImageThread(display, getUrl);
+		thread.start();
+
+	}
+
+	public static void main(String[] args) {
+
+		NasaFrame frame = new NasaFrame();
+		frame.setVisible(true);
+
+	}
+
+}
