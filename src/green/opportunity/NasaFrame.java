@@ -57,35 +57,39 @@ public class NasaFrame extends JFrame {
 		final MIImages[] mi_images = response.getMi_images();
 		Images[] images = mi_images[0].getImages();
 		for (int i = 0; i < mi_images.length; i++) {
+			images = mi_images[i].getImages();
 			for (int j = 0; j < images.length; j++) {
-				String url = mi_images[i].images[0].getUrl();
+				String url = images[j].getUrl();
 				urls.add(url);
 			}
 		}
 		PCamImages[] pcam_images = response.getPcam_images();
 
-		images = pcam_images[0].getImages();
 		for (int i = 0; i < pcam_images.length; i++) {
+			images = pcam_images[i].getImages();
 			for (int j = 0; j < images.length; j++) {
-				String url = pcam_images[i].images[0].getUrl();
+				String url = images[j].getUrl();
+				// String url = pcam_images[i].images[0].getUrl();
 				urls.add(url);
 			}
 		}
 
 		NCamImages[] ncam_images = response.getNcam_images();
-		images = ncam_images[0].getImages();
+
 		for (int i = 0; i < ncam_images.length; i++) {
+			images = ncam_images[i].getImages();
 			for (int j = 0; j < images.length; j++) {
-				String url = ncam_images[i].images[0].getUrl();
+				String url = images[j].getUrl();
 				urls.add(url);
 			}
 		}
 
 		FCamImages[] fcam_images = response.getFcam_images();
-		images = fcam_images[0].getImages();
+
 		for (int i = 0; i < fcam_images.length; i++) {
+			images = fcam_images[i].getImages();
 			for (int j = 0; j < images.length; j++) {
-				String url = fcam_images[i].images[0].getUrl();
+				String url = images[j].getUrl();
 				urls.add(url);
 			}
 		}
@@ -98,20 +102,20 @@ public class NasaFrame extends JFrame {
 			public void actionPerformed(ActionEvent event) {
 
 				// Images [] images = mi_images[1].getImages();
-				// if (location == (urls.size() - 1)) {
-				// String url = urls.get(0);
-				// picNum.setText(location + " of " + (urls.size() - 1));
-				// DownloadImageThread thread = new DownloadImageThread(display,
-				// url);
-				// thread.start();
-				//
-				// } else {
+				 if (location == (urls.size() - 1)) {
+				 String url = urls.get(0);
+				 picNum.setText(location + " of " + (urls.size() - 1));
+				 DownloadImageThread thread = new DownloadImageThread(display,
+				 url);
+				 thread.start();
+				
+				 } else {
 				String url = urls.get(++location);
 				picNum.setText(location + " of " + (urls.size() - 1));
 				DownloadImageThread thread = new DownloadImageThread(display, url);
 				thread.start();
 			}
-
+			}
 		};
 		next.addActionListener(getNext);
 
