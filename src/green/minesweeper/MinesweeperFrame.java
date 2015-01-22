@@ -32,6 +32,7 @@ public class MinesweeperFrame extends JFrame {
 	private JButton restart;
 	private Container container;
 	private int spacesClicked;
+	int turn = 0;
 
 	// private JLabel spaces;
 
@@ -156,7 +157,8 @@ public class MinesweeperFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				reset();
-				setBombs();
+				turn = 0;
+				// setBombs();
 			}
 		};
 		restart.addActionListener(restartGame);
@@ -167,7 +169,12 @@ public class MinesweeperFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				final JButton button = (JButton) event.getSource();
+
+				JButton button = (JButton) event.getSource();
+				if (turn == 0) {
+					setBombs(button);
+					turn++;
+				}
 				Location location;
 				for (int i = 0; i < ROW; i++) {
 					for (int j = 0; j < COL; j++) {
@@ -254,12 +261,12 @@ public class MinesweeperFrame extends JFrame {
 
 			}
 		}
-		setBombs();
+		// setBombs();
 		numBombs.setText(String.valueOf(countBombs));
 
 	}
 
-	public void setBombs() {
+	public void setBombs(JButton button) {
 
 		int setBombs = 0;
 		Random random = new Random();
@@ -268,7 +275,7 @@ public class MinesweeperFrame extends JFrame {
 			int x = random.nextInt(ROW);
 			int y = random.nextInt(COL);
 
-			if (!map.get(cells[x][y]).get(0)) {
+			if (!map.get(cells[x][y]).get(0) && cells[x][y] != button) {
 				ArrayList<Boolean> values = new ArrayList<Boolean>();
 				values.add(true);
 				values.add(false);

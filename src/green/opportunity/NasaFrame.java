@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 public class NasaFrame extends JFrame {
 
@@ -20,6 +21,8 @@ public class NasaFrame extends JFrame {
 	private JButton next;
 	private ArrayList<String> urls = new ArrayList<String>();
 	int location = 0;
+	private JTextField field;
+	private JButton get;
 
 	public NasaFrame() {
 
@@ -48,6 +51,28 @@ public class NasaFrame extends JFrame {
 
 		south.add(next);
 		container.add(south, BorderLayout.SOUTH);
+		Container north = new Container();
+		north.setLayout(new BorderLayout());
+		field = new JTextField();
+		north.add(field, BorderLayout.CENTER);
+		get = new JButton("  get  ");
+
+		ActionListener getSpecific = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				String getNum = field.getText();
+
+				String url = urls.get(Integer.parseInt(getNum));
+				picNum.setText(getNum + " of " + (urls.size() - 1));
+				DownloadImageThread thread = new DownloadImageThread(display, url);
+				thread.start();
+
+			}
+		};
+		get.addActionListener(getSpecific);
+		north.add(get, BorderLayout.EAST);
+		container.add(north, BorderLayout.NORTH);
+
 		DownloadMIIamages thread = new DownloadMIIamages(this);
 		thread.start();
 
@@ -102,19 +127,18 @@ public class NasaFrame extends JFrame {
 			public void actionPerformed(ActionEvent event) {
 
 				// Images [] images = mi_images[1].getImages();
-				 if (location == (urls.size() - 1)) {
-				 String url = urls.get(0);
-				 picNum.setText(location + " of " + (urls.size() - 1));
-				 DownloadImageThread thread = new DownloadImageThread(display,
-				 url);
-				 thread.start();
-				
-				 } else {
-				String url = urls.get(++location);
-				picNum.setText(location + " of " + (urls.size() - 1));
-				DownloadImageThread thread = new DownloadImageThread(display, url);
-				thread.start();
-			}
+				if (location == (urls.size() - 1)) {
+					String url = urls.get(0);
+					picNum.setText(location + " of " + (urls.size() - 1));
+					DownloadImageThread thread = new DownloadImageThread(display, url);
+					thread.start();
+
+				} else {
+					String url = urls.get(++location);
+					picNum.setText(location + " of " + (urls.size() - 1));
+					DownloadImageThread thread = new DownloadImageThread(display, url);
+					thread.start();
+				}
 			}
 		};
 		next.addActionListener(getNext);
