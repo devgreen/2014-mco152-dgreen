@@ -20,7 +20,7 @@ public class NasaFrame extends JFrame {
 	private JButton previous;
 	private JButton next;
 	private ArrayList<String> urls = new ArrayList<String>();
-	int location = 0;
+	private int location = 0;
 	private JTextField field;
 	private JButton get;
 
@@ -94,7 +94,6 @@ public class NasaFrame extends JFrame {
 			images = pcam_images[i].getImages();
 			for (int j = 0; j < images.length; j++) {
 				String url = images[j].getUrl();
-				// String url = pcam_images[i].images[0].getUrl();
 				urls.add(url);
 			}
 		}
@@ -126,8 +125,8 @@ public class NasaFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 
-				// Images [] images = mi_images[1].getImages();
 				if (location == (urls.size() - 1)) {
+					location = 0;
 					String url = urls.get(0);
 					picNum.setText(location + " of " + (urls.size() - 1));
 					DownloadImageThread thread = new DownloadImageThread(display, url);
@@ -148,7 +147,7 @@ public class NasaFrame extends JFrame {
 			public void actionPerformed(ActionEvent event) {
 
 				if (location == 0) {
-					location = urls.size() - 1;
+					location = (urls.size() - 1);
 					String url = urls.get(location);
 					picNum.setText(location + " of " + (urls.size() - 1));
 					DownloadImageThread thread = new DownloadImageThread(display, url);

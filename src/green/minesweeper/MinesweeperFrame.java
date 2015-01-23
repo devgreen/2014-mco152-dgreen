@@ -32,7 +32,7 @@ public class MinesweeperFrame extends JFrame {
 	private JButton restart;
 	private Container container;
 	private int spacesClicked;
-	int turn = 0;
+	private int turn = 0;
 
 	// private JLabel spaces;
 
