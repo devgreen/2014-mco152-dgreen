@@ -50,7 +50,6 @@ public class ISSOverheadFrame extends JFrame {
 					container.add(info, BorderLayout.CENTER);
 
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -65,7 +64,6 @@ public class ISSOverheadFrame extends JFrame {
 	public static void main(String[] args) throws IOException {
 		ISSOverheadFrame frame = new ISSOverheadFrame();
 		frame.setVisible(true);
-		// Scanner scanner = new Scanner(System.in);
 	}
 
 	public JList get() throws IOException {
@@ -123,7 +121,6 @@ public class ISSOverheadFrame extends JFrame {
 
 		Res[] res = loc.getResponse();
 		Date[] times = new Date[res.length];
-		// String [] d = new String [res.length];
 		for (int i = 0; i < res.length; i++) {
 			int time = res[i].getRisetime();
 			Date date = new Date();
@@ -132,7 +129,6 @@ public class ISSOverheadFrame extends JFrame {
 			date.setTime((long) time * 1000);
 			// String datesformatted = formater.format(date);
 			times[i] = date;
-			// d[i] = datesformatted;
 
 		}
 		JList list = new JList(times);

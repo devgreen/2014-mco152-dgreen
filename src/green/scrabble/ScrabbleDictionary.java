@@ -21,6 +21,7 @@ public class ScrabbleDictionary {
 			dictionary.add(word[0]);
 
 		}
+		inputFile.close();
 
 	}
 

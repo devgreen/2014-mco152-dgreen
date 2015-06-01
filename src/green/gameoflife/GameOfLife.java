@@ -15,8 +15,8 @@ import javax.swing.JFrame;
 
 public class GameOfLife extends JFrame {
 
-	private static final int COL = 20;
-	private static final int ROW = 20;
+	private static final int COL = 50;
+	private static final int ROW = 50;
 	private JButton cells[][];
 	private Map<JButton, Boolean> map = new HashMap<JButton, Boolean>();
 

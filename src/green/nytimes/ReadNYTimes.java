@@ -23,9 +23,10 @@ import com.google.gson.Gson;
 
 public class ReadNYTimes extends JFrame {
 
-	int count;
-	JList list;
-	Docs[] articles;
+	private static final long serialVersionUID = 1L;
+	private int count;
+	private JList<String> list;
+	private Docs[] articles;
 
 	public ReadNYTimes() throws IOException {
 
@@ -37,79 +38,47 @@ public class ReadNYTimes extends JFrame {
 		Container container = getContentPane();
 		container.setLayout(new BorderLayout());
 
-		URL url = new URL(
-				"http://api.nytimes.com/svc/search/v2/articlesearch.json?page=0&api-key=5b124297be5c2a5a0b3cb65343beeef1%3A18%3A70540252");
-		URLConnection connection = url.openConnection();
-		InputStream in = connection.getInputStream();
+		list = new JList<String>();
 
-		byte b[] = new byte[4096];
-		int n = -1;
-		StringBuilder info = new StringBuilder();
-		while ((n = in.read(b)) != -1) {
-			info.append(new String(b, 0, n));
-		}
-
-		String json = info.toString();
-		Gson gson = new Gson();
-
-		GetResponse response = gson.fromJson(json, GetResponse.class);
-		Response a = response.getResponse();
-		articles = a.getDocs();
-		String[] getArticles = new String[articles.length];
-		for (int i = 0; i < articles.length; i++) {
-			StringBuilder builder = new StringBuilder();
-			builder.append("<html>");
-			builder.append(String.valueOf(i + 1));
-			builder.append(". ");
-			builder.append(articles[i].getHeadline().getMain());
-			builder.append(":<br>");
-			builder.append(articles[i].getLead_paragraph());
-			builder.append("</html>");
-			getArticles[i] = builder.toString();
-		}
-
-		ListSelectionListener openArticle = new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent event) {
-				try {
-					if (!event.getValueIsAdjusting()){
-					open();
-					}
-				} catch (IOException a) { 
-					// TODO Auto-generated catch block
-					a.printStackTrace();
-				} catch (URISyntaxException a) {
-					// TODOAuto-generated catch block
-					a.printStackTrace();
-				}
-			}
-		};
-
-		list = new JList(getArticles);
-		 list.addListSelectionListener(openArticle);
 		container.add(new JScrollPane(list));
-
-		ActionListener listener = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				try {
-					list.setListData(getNext());
-
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		};
 
 		JButton next = new JButton("next");
 		next.addActionListener(listener);
 		container.add(next, BorderLayout.SOUTH);
+		DownloadThread thread = new DownloadThread(list, openArticle);
+		thread.start();
 
 	}
 
+	ListSelectionListener openArticle = new ListSelectionListener() {
+
+		@Override
+		public void valueChanged(ListSelectionEvent event) {
+			try {
+				if (!event.getValueIsAdjusting()) {
+					open();
+				}
+			} catch (IOException a) {
+				a.printStackTrace();
+			} catch (URISyntaxException a) {
+				a.printStackTrace();
+			}
+		}
+	};
+	ActionListener listener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			try {
+				list.setListData(getNext());
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	};
+
 	public String[] getNext() throws IOException {
+		// DownloadThread thread = new DownloadThread(list, count);
 		StringBuilder builder = new StringBuilder();
 		builder.append("http://api.nytimes.com/svc/search/v2/articlesearch.json?page=");
 		builder.append(String.valueOf(++count));
@@ -147,8 +116,8 @@ public class ReadNYTimes extends JFrame {
 
 	public void open() throws IOException, URISyntaxException {
 		int i = list.getSelectedIndex();
-		if ( i != -1 ) {
-		URL url = articles[i].getWeb_url();
+		if (i != -1) {
+			URL url = articles[i].getWeb_url();
 			Desktop.getDesktop().browse(url.toURI());
 		}
 	}
