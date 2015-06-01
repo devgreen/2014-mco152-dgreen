@@ -41,11 +41,10 @@ public class ReadNYTimes extends JFrame {
 		list = new JList<String>();
 
 		container.add(new JScrollPane(list));
-
 		JButton next = new JButton("next");
 		next.addActionListener(listener);
 		container.add(next, BorderLayout.SOUTH);
-		DownloadThread thread = new DownloadThread(list, openArticle);
+		DownloadThread thread = new DownloadThread(this, list, openArticle, articles);
 		thread.start();
 
 	}
@@ -68,50 +67,14 @@ public class ReadNYTimes extends JFrame {
 	ActionListener listener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent event) {
-			try {
-				list.setListData(getNext());
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			getNextArticles();
 		}
 	};
 
-	public String[] getNext() throws IOException {
-		// DownloadThread thread = new DownloadThread(list, count);
-		StringBuilder builder = new StringBuilder();
-		builder.append("http://api.nytimes.com/svc/search/v2/articlesearch.json?page=");
-		builder.append(String.valueOf(++count));
-		builder.append("&api-key=5b124297be5c2a5a0b3cb65343beeef1%3A18%3A70540252");
-		URL url = new URL(builder.toString());
-		URLConnection connection = url.openConnection();
-		InputStream in = connection.getInputStream();
+	public void getNextArticles() {
+		LaterArticlesDownloadThread thread = new LaterArticlesDownloadThread(this, list, articles, ++count);
+		thread.start();
 
-		byte b[] = new byte[4096];
-		int n = -1;
-		StringBuilder info = new StringBuilder();
-		while ((n = in.read(b)) != -1) {
-			info.append(new String(b, 0, n));
-		}
-
-		String json = info.toString();
-		Gson gson = new Gson();
-		GetResponse response = gson.fromJson(json, GetResponse.class);
-		Response a = response.getResponse();
-		articles = a.getDocs();
-		String[] getArticles = new String[articles.length];
-		for (int i = 0; i < articles.length; i++) {
-			StringBuilder articleBuilder = new StringBuilder();
-			articleBuilder.append("<html>");
-			articleBuilder.append(String.valueOf(i + 1));
-			articleBuilder.append(". ");
-			articleBuilder.append(articles[i].getHeadline().getMain());
-			articleBuilder.append(":<br>");
-			articleBuilder.append(articles[i].getLead_paragraph());
-			articleBuilder.append("</html>");
-			getArticles[i] = articleBuilder.toString();
-		}
-		return getArticles;
 	}
 
 	public void open() throws IOException, URISyntaxException {
@@ -125,5 +88,9 @@ public class ReadNYTimes extends JFrame {
 	public static void main(String[] args) throws IOException {
 		ReadNYTimes frame = new ReadNYTimes();
 		frame.setVisible(true);
+	}
+
+	public void setArticles(Docs[] articles) {
+		this.articles = articles;
 	}
 }
